@@ -1,0 +1,5 @@
+const show = (text, bad=false) => { const el=document.getElementById("message"); if(el){el.textContent=text;el.className=bad?"mt-3 text-danger":"mt-3 text-success";} };
+const rf=document.getElementById("registerForm");
+if(rf) rf.addEventListener("submit",async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(rf));try{const r=await fetch("/api/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});const j=await r.json();show(j.message,!r.ok);if(r.ok)setTimeout(()=>location.href="/login.html",900);}catch{show("Cannot reach server. Is npm run dev running?",true);}});
+const lf=document.getElementById("loginForm");
+if(lf) lf.addEventListener("submit",async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(lf));try{const r=await fetch("/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});const j=await r.json();if(!r.ok)return show(j.message,true);localStorage.setItem("wadToken",j.token);localStorage.setItem("wadStudent",JSON.stringify(j.student));location.href="/quiz.html";}catch{show("Cannot reach server. Is it running?",true);}});
